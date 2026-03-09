@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gen Z Vibe Check</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Inter:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #121212;
+            --neon-green: #00ff9d;
+            --neon-pink: #ff00ff;
+            --neon-cyan: #00ffff;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: white;
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+        }
+
+        .font-tech { font-family: 'Orbitron', sans-serif; }
+
+        .neon-border-green { border: 2px solid var(--neon-green); box-shadow: 0 0 15px var(--neon-green); }
+        .neon-border-pink { border: 2px solid var(--neon-pink); box-shadow: 0 0 15px var(--neon-pink); }
+        .neon-border-cyan { border: 2px solid var(--neon-cyan); box-shadow: 0 0 15px var(--neon-cyan); }
+
+        .neon-text-green { color: var(--neon-green); text-shadow: 0 0 10px var(--neon-green); }
+        .neon-text-pink { color: var(--neon-pink); text-shadow: 0 0 10px var(--neon-pink); }
+        .neon-text-cyan { color: var(--neon-cyan); text-shadow: 0 0 10px var(--neon-cyan); }
+
+        .bg-neon-green { background-color: var(--neon-green); }
+        .bg-neon-pink { background-color: var(--neon-pink); }
+        
+        .card-flip-inner {
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+        }
+        .card-flip:hover .card-flip-inner {
+            transform: rotateY(180deg);
+        }
+        .card-front, .card-back {
+            backface-visibility: hidden;
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+        }
+        .card-back {
+            transform: rotateY(180deg);
+        }
+
+        .tab-active {
+            border-bottom: 4px solid var(--neon-cyan);
+            color: var(--neon-cyan);
+            text-shadow: 0 0 10px var(--neon-cyan);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #1a1a1a; }
+        ::-webkit-scrollbar-thumb { background: var(--neon-pink); border-radius: 10px; }
+
+        .btn-glow:active {
+            transform: scale(0.95);
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+        .animate-pulse-fast { animation: pulse 1s infinite; }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center p-4 md:p-8">
+
+    <!-- Header -->
+    <header class="text-center mb-10 w-full max-w-6xl">
+        <h1 class="font-tech text-5xl md:text-7xl font-bold italic tracking-tighter mb-2 neon-text-green">
+            GEN Z VIBE CHECK
+        </h1>
+        <p class="text-xl md:text-2xl text-gray-400 font-tech">SLANG EXCHANGE // <span class="neon-text-pink">CYBERPUNK EDITION</span></p>
+    </header>
+
+    <!-- Navigation Tabs -->
+    <nav class="flex space-x-8 mb-12 w-full max-w-2xl justify-center font-tech text-xl">
+        <button onclick="switchTab('dictionary')" id="tab-dict" class="pb-2 transition-all duration-300 hover:text-white tab-active">DICTIONARY</button>
+        <button onclick="switchTab('quiz')" id="tab-quiz" class="pb-2 transition-all duration-300 hover:text-white">SURVIVAL QUIZ</button>
+    </nav>
+
+    <!-- Content Sections -->
+    <main class="w-full max-w-6xl flex-grow">
+        
+        <!-- Tab 1: Dictionary -->
+        <section id="dictionary-view" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <!-- Cards will be injected here -->
+        </section>
+
+        <!-- Tab 2: Survival Quiz -->
+        <section id="quiz-view" class="hidden flex flex-col items-center">
+            <div id="quiz-intro" class="text-center">
+                <div class="neon-border-pink p-8 rounded-lg bg-black/50 backdrop-blur-sm max-w-xl">
+                    <h2 class="text-3xl font-tech neon-text-pink mb-4">INITIALIZING SYSTEM...</h2>
+                    <p class="text-xl mb-6 leading-relaxed">Cross-cultural protocol engaged. English terms require Chinese answers. Chinese terms require English answers. Do not fail.</p>
+                    <button onclick="startQuiz()" class="bg-transparent neon-border-green px-10 py-4 font-tech text-2xl neon-text-green hover:bg-neon-green hover:text-black transition-all">START CHALLENGE</button>
+                </div>
+            </div>
+
+            <div id="quiz-container" class="hidden w-full max-w-4xl">
+                <div class="flex justify-between items-center mb-8 font-tech text-2xl">
+                    <div id="quiz-progress" class="neon-text-cyan">QUESTION 1/10</div>
+                    <div id="quiz-score" class="neon-text-green">SCORE: 000</div>
+                </div>
+
+                <div class="neon-border-cyan p-10 rounded-2xl bg-black/80 flex flex-col items-center mb-8">
+                    <p id="question-lang" class="text-sm uppercase tracking-widest opacity-60 mb-2 font-tech">DETECTING LANGUAGE...</p>
+                    <h3 id="question-text" class="text-6xl md:text-8xl font-bold mb-12 text-center break-words">...</h3>
+                    
+                    <div id="quiz-options" class="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
+                        <!-- Options injected here -->
+                    </div>
+                </div>
+
+                <div id="quiz-feedback" class="h-12 text-center text-2xl font-tech"></div>
+            </div>
+
+            <!-- Quiz End Screen -->
+            <div id="quiz-end" class="hidden text-center">
+                <div class="neon-border-green p-12 rounded-lg bg-black/60 backdrop-blur-md">
+                    <h2 class="text-5xl font-tech neon-text-green mb-4">TOTAL VIBE CHECKED</h2>
+                    <div id="final-score" class="text-8xl font-bold mb-8 neon-text-cyan">0/10</div>
+                    <p id="rank-message" class="text-2xl mb-8 italic">...</p>
+                    <button onclick="resetQuiz()" class="bg-transparent neon-border-pink px-10 py-4 font-tech text-2xl neon-text-pink hover:bg-neon-pink hover:text-white transition-all">REBOOT SYSTEM</button>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="mt-12 text-gray-600 font-tech text-sm text-center">
+        CYBER_PUNK_BILINGUAL_TOOL // v1.0.0 // NO CAP
+    </footer>
+
+    <script>
+        // Internal Database
+        const slangTerms = [
+            // English Terms
+            { term: "Nerf", language: "EN", meaning: "削弱、降低強度", example: "The devs nerfed my favorite character in the update." },
+            { term: "Buff", language: "EN", meaning: "強化、增強", example: "They really buffed the graphics in the new DLC." },
+            { term: "Slay", language: "EN", meaning: "做得好、超正、太殺了", example: "You looked amazing at the party! You totally slayed." },
+            { term: "Ate and left no crumbs", language: "EN", meaning: "表現完美、無可挑剔", example: "Her performance was iconic. She ate and left no crumbs." },
+            { term: "Cringe", language: "EN", meaning: "尷尬、令人反感", example: "That old joke was so cringe, nobody laughed." },
+            { term: "Second-hand embarrassment", language: "EN", meaning: "替人感到尷尬 (代位尷尬)", example: "Watching him fail the pickup line gave me major second-hand embarrassment." },
+            { term: "No Cap", language: "EN", meaning: "沒騙你、真的、不誇張", example: "I just finished the whole pizza by myself, no cap." },
+            { term: "For Real", language: "EN", meaning: "真的假、的確、真心地", example: "I am so tired today, for real." },
+            { term: "Hard Pass", language: "EN", meaning: "強烈拒絕、絕不考慮", example: "Broccoli flavored ice cream? That's a hard pass for me." },
+            { term: "Ghosting", language: "EN", meaning: "不告而別、突然斷聯", example: "We went on one date and then he started ghosting me." },
+            // Chinese Terms
+            { term: "雷", language: "ZH", meaning: "Terrible / Disappointing / Landmine", example: "這部電影真的很雷，不要去看。 (This movie is terrible.)" },
+            { term: "凱瑞", language: "ZH", meaning: "To carry (lead the team to victory)", example: "這場全靠你凱瑞了！ (We won because you carried us!)" },
+            { term: "有料", language: "ZH", meaning: "Having real talent or substance", example: "這個饒舌歌手很有料喔！ (This rapper has real talent!)" },
+            { term: "很頂", language: "ZH", meaning: "Top-tier / Excellent / Elite", example: "這間店的拉麵真的很頂。 (The ramen here is elite.)" },
+            { term: "社死", language: "ZH", meaning: "Social death / Extreme public embarrassment", example: "在全校面前跌倒簡直是社死現場。 (Falling in front of the whole school was social death.)" },
+            { term: "芭比Q", language: "ZH", meaning: "Finished / Screwed / Barbecued", example: "完了，芭比Q了，我忘記帶鑰匙。 (I'm screwed, I forgot my keys.)" },
+            { term: "真假", language: "ZH", meaning: "For real? / Really?", example: "真假？他真的這樣說？ (For real? He really said that?)" },
+            { term: "反正我是信了", language: "ZH", meaning: "I believe it anyway (sarcastic/emphatic)", example: "這理由太瞎了，但反正我是信了。 (That reason is blind, but I believe it anyway.)" },
+            { term: "婉拒", language: "ZH", meaning: "Politely decline / Hard pass", example: "面對他的告白，我只能婉拒。 (I had to decline his confession.)" },
+            { term: "暈船", language: "ZH", meaning: "Catching feelings too fast / Infatuation", example: "才約會一次你就暈船了嗎？ (Caught feelings after just one date?)" }
+        ];
+
+        let currentQuizData = [];
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let canAnswer = true;
+
+        // UI Functions
+        function switchTab(tab) {
+            const dictView = document.getElementById('dictionary-view');
+            const quizView = document.getElementById('quiz-view');
+            const tabDict = document.getElementById('tab-dict');
+            const tabQuiz = document.getElementById('tab-quiz');
+
+            if (tab === 'dictionary') {
+                dictView.classList.remove('hidden');
+                quizView.classList.add('hidden');
+                tabDict.classList.add('tab-active');
+                tabQuiz.classList.remove('tab-active');
+            } else {
+                dictView.classList.add('hidden');
+                quizView.classList.remove('hidden');
+                tabDict.classList.remove('tab-active');
+                tabQuiz.classList.add('tab-active');
+            }
+        }
+
+        function initDictionary() {
+            const container = document.getElementById('dictionary-view');
+            container.innerHTML = '';
+            
+            slangTerms.forEach(item => {
+                const colorClass = item.language === 'EN' ? 'neon-border-pink' : 'neon-border-green';
+                const textClass = item.language === 'EN' ? 'neon-text-pink' : 'neon-text-green';
+                const langLabel = item.language === 'EN' ? 'ENG SLANG' : 'ZH SLANG';
+                
+                const card = `
+                    <div class="h-64 card-flip cursor-pointer perspective-1000">
+                        <div class="card-flip-inner relative w-full h-full shadow-xl">
+                            <!-- Front -->
+                            <div class="card-front ${colorClass} bg-black/40 rounded-xl flex flex-col items-center justify-center p-6 text-center">
+                                <span class="text-xs font-tech opacity-60 mb-2">${langLabel}</span>
+                                <h3 class="text-3xl font-bold font-tech ${textClass}">${item.term}</h3>
+                                <p class="mt-4 text-sm text-gray-400 italic">Hover to decrypt...</p>
+                            </div>
+                            <!-- Back -->
+                            <div class="card-back ${colorClass} bg-gray-900 rounded-xl flex flex-col items-center justify-center p-6 text-center">
+                                <h4 class="text-xl font-bold mb-2 ${textClass}">${item.meaning}</h4>
+                                <p class="text-sm leading-tight text-white/90">${item.example}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                container.innerHTML += card;
+            });
+        }
+
+        // Quiz Logic
+        function startQuiz() {
+            document.getElementById('quiz-intro').classList.add('hidden');
+            document.getElementById('quiz-end').classList.add('hidden');
+            document.getElementById('quiz-container').classList.remove('hidden');
+            
+            score = 0;
+            currentQuestionIndex = 0;
+            updateScoreDisplay();
+            
+            // Randomize 10 terms for the quiz
+            currentQuizData = [...slangTerms].sort(() => 0.5 - Math.random()).slice(0, 10);
+            showQuestion();
+        }
+
+        function showQuestion() {
+            canAnswer = true;
+            document.getElementById('quiz-feedback').innerText = '';
+            
+            const item = currentQuizData[currentQuestionIndex];
+            const qText = document.getElementById('question-text');
+            const qLang = document.getElementById('question-lang');
+            const qProg = document.getElementById('quiz-progress');
+            
+            qProg.innerText = `QUESTION ${currentQuestionIndex + 1}/10`;
+            qText.innerText = item.term;
+            qText.className = `text-6xl md:text-8xl font-bold mb-12 text-center break-words ${item.language === 'EN' ? 'neon-text-pink' : 'neon-text-green'}`;
+            qLang.innerText = item.language === 'EN' ? 'ENGLISH INPUT' : 'CHINESE INPUT';
+
+            // Options logic
+            // Rule: EN question -> ZH answers, ZH question -> EN answers
+            const optionsContainer = document.getElementById('quiz-options');
+            optionsContainer.innerHTML = '';
+
+            const correctAnswer = item.meaning;
+            // Get a wrong answer of the correct target language
+            let wrongAnswer = '';
+            const potentialDistractors = slangTerms.filter(t => t.language === item.language && t.term !== item.term);
+            wrongAnswer = potentialDistractors[Math.floor(Math.random() * potentialDistractors.length)].meaning;
+
+            const choices = [correctAnswer, wrongAnswer].sort(() => 0.5 - Math.random());
+
+            choices.forEach(choice => {
+                const btn = document.createElement('button');
+                btn.className = "w-full py-6 text-2xl md:text-3xl font-bold rounded-xl transition-all duration-200 neon-border-cyan bg-black hover:bg-neon-cyan hover:text-black btn-glow";
+                btn.innerText = choice;
+                btn.onclick = () => checkAnswer(choice, correctAnswer);
+                optionsContainer.appendChild(btn);
+            });
+        }
+
+        function checkAnswer(selected, correct) {
+            if (!canAnswer) return;
+            canAnswer = false;
+
+            const feedback = document.getElementById('quiz-feedback');
+            
+            if (selected === correct) {
+                score += 100;
+                feedback.innerHTML = '<span class="neon-text-green animate-pulse-fast">VIBE CHECK PASSED +100</span>';
+            } else {
+                feedback.innerHTML = '<span class="neon-text-pink">VIBE CHECK FAILED - ERROR</span>';
+            }
+            
+            updateScoreDisplay();
+
+            setTimeout(() => {
+                currentQuestionIndex++;
+                if (currentQuestionIndex < 10) {
+                    showQuestion();
+                } else {
+                    endQuiz();
+                }
+            }, 1500);
+        }
+
+        function updateScoreDisplay() {
+            document.getElementById('quiz-score').innerText = `SCORE: ${score.toString().padStart(3, '0')}`;
+        }
+
+        function endQuiz() {
+            document.getElementById('quiz-container').classList.add('hidden');
+            document.getElementById('quiz-end').classList.remove('hidden');
+            
+            const finalScoreElem = document.getElementById('final-score');
+            const correctCount = score / 100;
+            finalScoreElem.innerText = `${correctCount}/10`;
+            
+            const rankMsg = document.getElementById('rank-message');
+            if (correctCount === 10) rankMsg.innerText = "STATUS: ABSOLUTE LEGEND (NO CAP)";
+            else if (correctCount >= 7) rankMsg.innerText = "STATUS: SLAYING THE VIBE";
+            else if (correctCount >= 4) rankMsg.innerText = "STATUS: MID (NEED MORE GYAT)";
+            else rankMsg.innerText = "STATUS: TOTAL CRINGE (REBOOT RECOMMENDED)";
+        }
+
+        function resetQuiz() {
+            startQuiz();
+        }
+
+        // Initialize
+        window.onload = () => {
+            initDictionary();
+        };
+    </script>
+</body>
+</html>
